@@ -35,7 +35,7 @@ query GetAdminData($uuid: uuid!) {
       profile_permissions(
         where: {
           deleted_at: { _is_null: true }
-          module_permission: { module_name: { _eq: "inspection" } }
+          module_permission: { module_name: { _eq: "cte" } }
         }
       ) {
         ...ProfilePermission

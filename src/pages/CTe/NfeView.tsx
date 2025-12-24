@@ -65,6 +65,10 @@ export function NfeView({
           </Alert>
         )}
 
+        <Typography sx={{ color: 'text.secondary' }}>
+          Clique sobre os dados para copiá-los
+        </Typography>
+
         <Stack sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <DataItem label="Número" value={data.numero_nf} />
           <DataItem label="Série" value={data.serie_nf} sx={{ width: 100 }} />
@@ -124,7 +128,10 @@ function DataItem({
   sx?: SxProps;
 }) {
   return (
-    <Stack sx={{ gap: 0.25, ...sx }}>
+    <Stack
+      onClick={() => void navigator.clipboard.writeText(String(value || ''))}
+      sx={{ gap: 0.25, cursor: 'pointer', ...sx }}
+    >
       <Typography sx={{ color: 'text.secondary' }}>{label}</Typography>
       <TextOverflow>{String(value || '-')}</TextOverflow>
     </Stack>

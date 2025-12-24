@@ -44,7 +44,7 @@ export function Appbar() {
             component="img"
             src={theme.palette.mode === 'dark' ? logoDarkSvg : logoSvg}
             sx={{
-              maxHeight: 28,
+              maxHeight: 20,
               position: 'absolute',
               left: 0,
               px: 2,

@@ -61,7 +61,7 @@ export const services = {
     ) as PermissionData[];
 
     const hasAccess = permissions.some(
-      (permission) => permission.action === 'inspection_panel_access',
+      (permission) => permission.action === 'cte_access',
     );
 
     return {
