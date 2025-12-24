@@ -3,6 +3,7 @@ import {
   PanelBase,
   Scrollable,
   TextOverflow,
+  toast,
 } from '@fluxu-labs/lib';
 import { NfData, services } from './utils';
 import { Alert, Button, Stack, SxProps, Typography } from '@mui/material';
@@ -129,7 +130,10 @@ function DataItem({
 }) {
   return (
     <Stack
-      onClick={() => void navigator.clipboard.writeText(String(value || ''))}
+      onClick={() => {
+        void navigator.clipboard.writeText(String(value || ''));
+        toast.info('Dado copiado!');
+      }}
       sx={{ gap: 0.25, cursor: 'pointer', ...sx }}
     >
       <Typography sx={{ color: 'text.secondary' }}>{label}</Typography>
