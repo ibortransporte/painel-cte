@@ -12,10 +12,10 @@ import { format } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
 import { SubGetLockedNfsDocument } from 'src/@types/generated/types';
 import { FAIcon } from 'src/components/FAIcon';
+import { useAuthContext } from 'src/hooks/useAuthContext';
 import { formatCurrency } from 'src/utils/format';
 import { NfeView } from './NfeView';
 import { NfData, services } from './utils';
-import { useAuthContext } from 'src/hooks/useAuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -28,23 +28,10 @@ export default function CTe() {
   const { data: lockedNfs, loading: isLoadingLockedNfs } = useSubscription(
     SubGetLockedNfsDocument,
   );
+
   const [nfsPendingCteRaw, setNfsPendingCteRaw] = useState<NfData[]>([]);
 
-  const init = async () => {
-    setIsLoading(true);
-    try {
-      await services.getNfsPendingCte().then(setNfsPendingCteRaw);
-    } catch (error) {
-      errorHandler({ error });
-    }
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    void init();
-  }, []);
-
-  // ----------------------------------------------------------------------
+  //
 
   const [currentData, setCurrentData] = useState<NfData | null>(null);
 
@@ -56,7 +43,7 @@ export default function CTe() {
     setCurrentData(null);
   };
 
-  // ----------------------------------------------------------------------
+  //
 
   const nfsPendingCte = useMemo(() => {
     const updated = nfsPendingCteRaw.map((item) => {
@@ -74,17 +61,34 @@ export default function CTe() {
       }
       return item;
     });
-
     if (currentData) {
       const newData = updated.find(
         (item) => item.numero_nf === currentData.numero_nf,
       );
       if (newData) setCurrentData(newData);
     }
-
     return updated;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nfsPendingCteRaw, lockedNfs]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await services.getNfsPendingCte();
+        setNfsPendingCteRaw(data);
+      } catch (error) {
+        errorHandler({ error });
+      }
+      setIsLoading(false);
+    };
+    void fetchData();
+    const interval = window.setInterval(() => void fetchData(), 5000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  // ----------------------------------------------------------------------
 
   // ----------------------------------------------------------------------
 
