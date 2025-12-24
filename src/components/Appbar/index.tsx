@@ -44,7 +44,7 @@ export function Appbar() {
             component="img"
             src={theme.palette.mode === 'dark' ? logoDarkSvg : logoSvg}
             sx={{
-              maxHeight: 18,
+              maxHeight: 28,
               position: 'absolute',
               left: 0,
               px: 2,
@@ -56,7 +56,7 @@ export function Appbar() {
           <Stack direction={'row'}>
             <AppbarMenuItem
               active={pathname === ''}
-              label={'CT-e'}
+              label={'NFs pendente de CTe'}
               onClick={() => void navigate('')}
             />
           </Stack>

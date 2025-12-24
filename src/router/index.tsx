@@ -1,7 +1,13 @@
 import { ErrorBoundaryLayout, LoadingOverlay } from '@fluxu-labs/lib';
 import { lazy, Suspense } from 'react';
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from 'react-router-dom';
 import { Appbar } from 'src/components/Appbar';
+import { AuthGuard } from 'src/guards/AuthGuard';
 
 // ----------------------------------------------------------------------
 
@@ -16,10 +22,12 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: (
-          <Suspense fallback={<LoadingOverlay />}>
-            <Appbar />
-            <Outlet />
-          </Suspense>
+          <AuthGuard>
+            <Suspense fallback={<LoadingOverlay />}>
+              <Appbar />
+              <Outlet />
+            </Suspense>
+          </AuthGuard>
         ),
         children: [
           {
@@ -27,6 +35,11 @@ const router = createBrowserRouter([
             element: <CTe />,
           },
         ],
+      },
+
+      {
+        path: '*',
+        element: <Navigate to="/" replace />,
       },
     ],
   },

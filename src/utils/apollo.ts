@@ -11,6 +11,7 @@ import { OperationTypeNode } from 'graphql';
 import { createClient } from 'graphql-ws';
 import { ENV } from 'src/env';
 import { eventEmitter } from './eventEmitter';
+import { getHeadersFromToken, getLocalStorageToken } from './auth';
 
 // ----------------------------------------------------------------------
 
@@ -86,10 +87,11 @@ const getApolloClient = ({
 const apolloClient = getApolloClient({
   wsUrl: ENV.HASURA_WSS,
   httpUrl: ENV.HASURA_HTTPS,
-  headers: async () => ({
-    'x-hasura-admin-secret': ENV.HASURA_ADMIN_SECRET,
-    'x-hasura-role': 'admin',
-  }),
+  headers: async () => {
+    const token = getLocalStorageToken();
+    if (!token) return {};
+    return getHeadersFromToken(token);
+  },
 });
 
 // ----------------------------------------------------------------------

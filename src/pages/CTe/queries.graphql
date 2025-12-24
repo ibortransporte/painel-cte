@@ -1,0 +1,38 @@
+# ----------------------------------------------------------------------
+
+query GetNfsPendingCte {
+  getNfsPendingCte {
+    chave_nf
+    cnpj_destinatario
+    cnpj_remetente
+    data_nf
+    endereco_destino
+    observacao
+    numero_nf
+    peso
+    serie_nf
+    valor_nf
+  }
+}
+
+mutation InsertNfLock($data: cte_nf_lock_insert_input!) {
+  insert_cte_nf_lock_one(object: $data) {
+    nf
+  }
+}
+
+mutation DeleteNfLock($nf: Int!) {
+  delete_cte_nf_lock_by_pk(nf: $nf) {
+    nf
+  }
+}
+
+subscription SubGetLockedNfs {
+  cte_nf_lock {
+    nf
+    user_uuid
+    admin {
+      name
+    }
+  }
+}

@@ -9,11 +9,13 @@ import {
   useTheme,
 } from '@mui/material';
 import { useState } from 'react';
+import { useAuthContext } from 'src/hooks/useAuthContext';
 
 // ----------------------------------------------------------------------
 
 export function ProfileButton() {
   const theme = useTheme();
+  const { signOut, user } = useAuthContext();
   const { mode, setMode, systemMode } = useColorScheme();
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -34,14 +36,14 @@ export function ProfileButton() {
         <Stack sx={{ width: 220 }}>
           <Stack sx={{ px: 1.5, py: 1 }}>
             <Typography noWrap sx={{ fontSize: 13, fontWeight: 500 }}>
-              Usuário de teste
+              {user?.name}
             </Typography>
 
             <Typography
               noWrap
               sx={{ fontSize: 12, color: theme.palette.text.secondary }}
             >
-              teste@fluxu.com.br
+              {user?.email}
             </Typography>
           </Stack>
 
@@ -66,7 +68,7 @@ export function ProfileButton() {
             <ProfileItem
               label="Sair"
               icon={<LibFAIcon icon="signOut" fontSize={12} />}
-              onClick={() => {}}
+              onClick={() => void signOut()}
             />
           </Stack>
         </Stack>

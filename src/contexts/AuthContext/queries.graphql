@@ -1,0 +1,51 @@
+# ----------------------------------------------------------------------
+
+fragment User on admin {
+  uuid
+  name
+  email
+  avatar_url
+}
+
+fragment ProfilePermission on profile_permission {
+  uuid
+  profile_uuid
+  action
+  deleted_at
+}
+
+# ----------------------------------------------------------------------
+
+query SignIn($email: String!, $password: String!) {
+  admin_signin(email: $email, password: $password) {
+    admin_uuid
+    token
+    refresh_token
+  }
+}
+
+query GetAdminData($uuid: uuid!) {
+  admin_by_pk(uuid: $uuid) {
+    ...User
+  }
+  admin_fk_profile(
+    where: { admin_uuid: { _eq: $uuid }, deleted_at: { _is_null: true } }
+  ) {
+    profile {
+      profile_permissions(
+        where: {
+          deleted_at: { _is_null: true }
+          module_permission: { module_name: { _eq: "inspection" } }
+        }
+      ) {
+        ...ProfilePermission
+      }
+    }
+  }
+}
+
+query RefreshToken($refresh_token: String!) {
+  get_refresh_token(refresh_token: $refresh_token) {
+    token
+  }
+}
